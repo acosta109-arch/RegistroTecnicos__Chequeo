@@ -1,0 +1,65 @@
+﻿@page "/Tecnicos"
+@rendermode InteractiveServer
+@inject TecnicoService tecnicoService
+@inject NavigationManager navigation
+
+<PageTitle>Técnicos</PageTitle>
+<div class="container">
+    <div class="card shadow-lg">
+        @*Header*@
+        <div class="card-header">
+            <h1><strong>Técnicos</strong></h1
+            <button type="button" class="btn btn-outline-primary" @onclick="IrACrear">Guardar</button>
+        </div>
+        @*Body*@
+        <div class="card body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>TécnicosId</th>
+                        <th>Nombres</th>
+                        <th>Sueldo por hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var tecnico in tecnicos)
+                    {
+                        <tr>
+                            <td>@tecnico.TecnicosId</td>
+                            <td>@tecnico.Nombres</td>
+                            <td>@tecnico.SueldoHora</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-danger" @onclick="()=> IrAEliminar(tecnico.TecnicosId)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @*Footer*@
+        <div class="cardcard-footer">
+            <p><strong>Total de técnicos:</strong> @tecnicos.Count</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Tecnicos> tecnicos = new List<Tecnicos>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(500);
+        tecnicos = await tecnicoService.Listar(t => t.TecnicosId > 0);
+    }
+
+    public void IrACrear()
+    {
+        navigation.NavigateTo("/CreateTecnicos");
+    }
+
+    public async void IrAEliminar(int id)
+    {
+    navigation.NavigateTo($"/DeleteTecnicos/{id}");
+    }
+
+}
